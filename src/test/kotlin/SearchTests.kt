@@ -1,13 +1,24 @@
-import com.codeborne.selenide.Condition.text
-import com.codeborne.selenide.Selenide.`$`
-import com.codeborne.selenide.Selenide.open
+import com.microsoft.playwright.BrowserType
+import com.microsoft.playwright.Playwright
+import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import org.junit.jupiter.api.Test
 
 class SearchTests {
     @Test
     fun successfulSearchTest() {
-        open("https://github.com/search")
-        `$`("[aria-label='Search GitHub']").setValue("qa.guru").pressEnter()
-        `$`("[data-testid='results-list']").shouldHave(text("QA.GURU"))
+        Playwright.create().use { playwright ->
+            val browser = playwright.chromium().launch(
+                BrowserType.LaunchOptions().setHeadless(false)
+            )
+            val page = browser.newPage()
+
+            page.navigate("https://github.com/search")
+            val search = page.locator("[aria-label='Search GitHub']")
+            search.fill("qa.guru")
+            search.press("Enter")
+
+            assertThat(page.locator("[data-testid='results-list']")).containsText("QA.GURU")
+            browser.close()
+        }
     }
 }
