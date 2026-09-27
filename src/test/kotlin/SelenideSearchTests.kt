@@ -3,7 +3,7 @@ import com.codeborne.selenide.Selenide.`$`
 import com.codeborne.selenide.Selenide.open
 import org.junit.jupiter.api.Test
 
-class SearchTests {
+class SelenideSearchTests {
     @Test
     fun successfulSearchTest() {
         open("https://github.com/search")
